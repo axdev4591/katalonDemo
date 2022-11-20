@@ -1,0 +1,22 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: docker pull katalonstudio/katalon
+  displayName: 'docker Pull katalon studio images'
+
+- script: docker run -t --rm -v "$(pwd)":/katalon/katalon/source katalonstudio/katalon katalon-execute.sh -browserType="Chrome" -retry=0 -testSuitePath="Test Suites/testOne" -browserType="Chrome" -executionProfile="default" -apiKey="4da4b244-91a4-4341-a16a-495e07a1f757"
+  displayName: 'Runnning Katalon TestDemo'
+
+- task: PublishPipelineArtifact@0
+  inputs:
+    artifactName: 'JUnit Report' 
+    targetPath: report/
